@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  background-color: #0c0a09;
+  color-scheme: dark;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
+  background-color: #0c0a09;
+  color: #fafaf9;
+}
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+a,
+button {
+  -webkit-tap-highlight-color: transparent;
+}

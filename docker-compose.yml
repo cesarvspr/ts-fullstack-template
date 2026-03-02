@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: app
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  be:
+    build:
+      context: .
+      dockerfile: be/Dockerfile
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/app
+      JWT_SECRET: change-me-in-production
+      NODE_ENV: development
+      PORT: 4000
+    volumes:
+      - ./be/src:/app/be/src
+      - ./be/prisma:/app/be/prisma
+      - be_node_modules:/app/be/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "cd /app/be && npx prisma generate && npx prisma migrate deploy && npx tsx watch src/index.ts"
+
+  fe:
+    build:
+      context: .
+      dockerfile: fe/Dockerfile
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NEXT_PUBLIC_GRAPHQL_URL: http://localhost:4000/graphql
+    volumes:
+      - ./fe/src:/app/fe/src
+      - ./fe/public:/app/fe/public
+      - fe_node_modules:/app/fe/node_modules
+    depends_on:
+      - be
+
+volumes:
+  pg_data:
+  be_node_modules:
+  fe_node_modules:

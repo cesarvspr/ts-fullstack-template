@@ -1,0 +1,13 @@
+{
+  "name": "ts-fullstack-template",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n fe,be -c cyan,yellow \"cd fe && yarn dev\" \"cd be && yarn dev\"",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.5.0"
+  }
+}
