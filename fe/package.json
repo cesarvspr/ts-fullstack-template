@@ -9,18 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "next": "16.0.10",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "styled-components": "^6.1.19"
+    "next": "16.1.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "styled-components": "^6.3.11"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/styled-components": "^5.1.35",
+    "@types/node": "^25",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/styled-components": "^5.1.36",
     "eslint": "^9",
-    "eslint-config-next": "16.0.10",
+    "eslint-config-next": "16.1.6",
     "typescript": "5.9.3"
   }
 }
