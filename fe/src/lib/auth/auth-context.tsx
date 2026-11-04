@@ -64,39 +64,41 @@ const ME_QUERY = `
   }
 `;
 
+// Resolves the session for the stored token, or null when there is no valid
+// token. It sets no React state, so the effect below updates state only in
+// its promise callback and never synchronously.
+const restoreSession = async (): Promise<AuthPayload | null> => {
+  const storedToken = getAuthToken();
+  if (!storedToken) return null;
+
+  try {
+    setAuthToken(storedToken);
+    const data = await graphqlClient<{ me: User | null }>(ME_QUERY);
+    if (data.me) return { token: storedToken, user: data.me };
+    clearAuthToken();
+    return null;
+  } catch {
+    clearAuthToken();
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchUser = useCallback(async () => {
-    const storedToken = getAuthToken();
-    if (!storedToken) {
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      setAuthToken(storedToken);
-      const data = await graphqlClient<{ me: User | null }>(ME_QUERY);
-      if (data.me) {
-        setUser(data.me);
-        setToken(storedToken);
+  useEffect(() => {
+    restoreSession().then(session => {
+      if (session) {
+        setUser(session.user);
+        setToken(session.token);
       } else {
-        clearAuthToken();
         setToken(null);
       }
-    } catch {
-      clearAuthToken();
-      setToken(null);
-    } finally {
       setIsLoading(false);
-    }
+    });
   }, []);
-
-  useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
 
   const signIn = useCallback(
     async (email: string, password: string): Promise<User> => {

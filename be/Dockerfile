@@ -1,7 +1,7 @@
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /app/be
 COPY be/package.json be/yarn.lock* ./
-RUN yarn install
+RUN yarn install --frozen-lockfile
 COPY be/ .
 ENV DATABASE_URL=postgresql://placeholder:placeholder@localhost:5432/placeholder
 RUN npx prisma generate

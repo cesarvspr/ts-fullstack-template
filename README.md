@@ -12,6 +12,7 @@ Fullstack TypeScript template with JWT auth, ready to clone and build on.
 ## Quick Start (Docker)
 
 ```bash
+cp .env.example .env
 docker-compose up --build
 ```
 
@@ -20,9 +21,13 @@ docker-compose up --build
 - Seed: `docker-compose exec be npx tsx src/seed.ts`
 - Login: `admin@example.com` / `password123`
 
+After a dependency update, remove the old `node_modules` volumes so the containers get the new packages: `docker-compose down`, then `docker volume rm <project>_be_node_modules <project>_fe_node_modules` (`<project>` is the folder name by default). Do not use `down -v`, it also deletes the database volume.
+
 ## Quick Start (Local)
 
-Requires Node 20+ and a PostgreSQL instance.
+Requires Node 24 or Node 26+ (Node 25 is not supported) and a PostgreSQL instance. `nvm use` picks the version from `.nvmrc`.
+
+`be/.env.example` expects Postgres on `localhost:5432` with user and password `postgres`. If yours is different, edit `DATABASE_URL` in `be/.env` after you copy it. `prisma migrate dev` creates the `app` database if it does not exist. To run only the Docker database, copy the root `.env.example` to `.env` and run `docker-compose up -d db`.
 
 ```bash
 # Install deps
@@ -46,6 +51,14 @@ cd ..
 # Run both
 yarn dev
 ```
+
+- Frontend: http://localhost:3000
+- Backend: http://localhost:4000/graphql
+- Login: `admin@example.com` / `password123`
+
+`LOG_LEVEL` in `be/.env` must be `trace`, `debug`, `info`, `warn` or `error` (lowercase, default `info`). Any other value stops the backend at startup.
+
+`cd fe && yarn typecheck` type-checks with TypeScript 7. `next build` and `yarn lint` still use TypeScript 6 until typescript-eslint supports 7.
 
 ## Project Structure
 

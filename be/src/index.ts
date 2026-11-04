@@ -1,7 +1,8 @@
 import 'dotenv/config';
 import fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { createYoga } from 'graphql-yoga';
+import { createYoga, Logger } from 'graphql-yoga';
+import { PinoLogWriter } from '@graphql-hive/logger/writers/pino';
 import jwt from 'jsonwebtoken';
 import { checkDatabaseConnection, disconnectDatabase } from './db';
 import { schema } from './schema';
@@ -36,12 +37,7 @@ const yoga = createYoga<GraphQLContext>({
   graphiql: true,
   landingPage: false,
   maskedErrors: process.env.NODE_ENV === 'production',
-  logging: {
-    debug: (...args) => logger.debug(args),
-    info: (...args) => logger.info(args),
-    warn: (...args) => logger.warn(args),
-    error: (...args) => logger.error(args),
-  },
+  logging: new Logger({ writers: [new PinoLogWriter(logger)] }),
 });
 
 async function startServer() {

@@ -4,8 +4,8 @@ import { prisma } from '../db';
 
 // DateTime scalar
 builder.scalarType('DateTime', {
-  serialize: value => (value as Date).toISOString(),
-  parseValue: value => {
+  coerceOutputValue: value => (value as Date).toISOString(),
+  coerceInputValue: value => {
     if (typeof value === 'string') return new Date(value);
     throw new Error('Invalid DateTime value');
   },
