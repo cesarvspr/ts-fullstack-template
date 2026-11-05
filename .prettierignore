@@ -6,3 +6,5 @@ coverage
 .cache
 prisma/migrations
 **/*.lock
+**/src/generated
+next-env.d.ts

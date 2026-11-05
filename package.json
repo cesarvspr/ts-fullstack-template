@@ -2,12 +2,15 @@
   "name": "ts-fullstack-template",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "^24.0.0 || >=26.0.0"
+  },
   "scripts": {
     "dev": "concurrently -n fe,be -c cyan,yellow \"cd fe && yarn dev\" \"cd be && yarn dev\"",
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "concurrently": "^9.2.1",
-    "prettier": "^3.8.1"
+    "concurrently": "^10.0.6",
+    "prettier": "^3.9.10"
   }
 }
